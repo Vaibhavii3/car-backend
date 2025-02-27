@@ -4,10 +4,13 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import connectDB from "./config/db.js";
+
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import reviewRoutes from "./routes/reviewRoutes.js";
+import serviceRoutes from "./routes/serviceRoutes.js";
 
 dotenv.config();
 
@@ -24,11 +27,10 @@ app.use(morgan("dev"));
 
 // Routes
 app.use("/api/auth", authRoutes);
-
 app.use("/api/users", userRoutes);
-
+app.use("/api/services", serviceRoutes);
 app.use("/api/bookings", bookingRoutes);
-
+app.use("/api/reviews", reviewRoutes);
 app.use("/api/admin", adminRoutes);
 
 // Server Listening
