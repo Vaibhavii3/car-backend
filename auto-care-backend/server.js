@@ -21,8 +21,7 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-// app.use(cors());
-// const cors = require("cors");
+
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 
 app.use(helmet());
