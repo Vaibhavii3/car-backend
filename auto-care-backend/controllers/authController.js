@@ -12,6 +12,13 @@ export const register = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
+        let assignedRole = "user"; // Default role is "user"
+
+        // Only allow admin creation if a special "admin secret" is provided
+        if (role === "admin" && req.body.adminSecret === process.env.ADMIN_SECRET) {
+            assignedRole = "admin";
+        }
+
         user = new User({ name, email, password: hashedPassword, role });
         await user.save();
 
@@ -36,6 +43,17 @@ export const login = async (req, res) => {
         });
 
         res.json({ token, user: { id: user._id, name: user.name, email: user.email, role: user.role } });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const verifyUser = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).select("-password"); // Exclude password
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        res.json({ user });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

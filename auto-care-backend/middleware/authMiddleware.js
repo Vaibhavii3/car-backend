@@ -7,7 +7,6 @@ const authMiddleware = (req, res, next) => {
     return res.status(401).json({ message: "Access Denied" });
   }
 
-  // Remove Bearer prefix if present
   if (token.startsWith("Bearer ")) {
     token = token.slice(7).trim();
   }
