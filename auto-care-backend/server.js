@@ -22,7 +22,7 @@ const app = express();
 // Middleware
 app.use(express.json());
 
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(cors({ origin: ["http://localhost:3000", "http://localhost:8081"], credentials: true }));
 
 app.use(helmet());
 app.use(morgan("dev"));
@@ -32,8 +32,9 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/bookings", bookingRoutes);
-app.use("/api/reviews", reviewRoutes);
 app.use("/api/admin", adminRoutes);
+app.use('/api/order-tracking', orderTrackingRoutes);
+app.use('/api/reviews', reviewRoutes);
 
 // Server Listening
 const PORT = process.env.PORT || 5000;

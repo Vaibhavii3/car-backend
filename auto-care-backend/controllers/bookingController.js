@@ -1,49 +1,73 @@
-import Booking from "../models/Booking.js";
-import Service from "../models/Service.js";
+const Booking = require('../models/Booking');
 
-// Create a new booking
-export const createBooking = async (req, res) => {
-  try {
-    const { serviceId, carModel, preferredDate, address } = req.body;
+// Place a New Booking
+exports.placeBooking = async (req, res) => {
+    try {
+        const { packageId, pickupAddress, pickupDate, pickupTime } = req.body;
 
-    // Check if service exists
-    const service = await Service.findById(serviceId);
-    if (!service) return res.status(404).json({ message: "Service not found" });
+        const booking = new Booking({
+            userId: req.user.id,
+            packageId,
+            pickupAddress,
+            pickupDate,
+            pickupTime,
+            status: "Scheduled"
+        });
 
-    const booking = new Booking({
-      user: req.user.id,
-      service: service._id,
-      carModel,
-      preferredDate,
-      address,
-    });
-
-    await booking.save();
-    res.status(201).json({ message: "Booking created successfully", booking });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+        await booking.save();
+        res.json({ message: 'Booking confirmed', booking });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 };
 
-// Get user bookings
-export const getUserBookings = async (req, res) => {
-  try {
-    const bookings = await Booking.find({ user: req.user.id })
-      .populate("service", "name price")
-      .sort({ createdAt: -1 });
-    res.json(bookings);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+// Get Upcoming Bookings
+exports.getUpcomingBookings = async (req, res) => {
+    try {
+        const bookings = await Booking.find({ userId: req.user.id, status: { $ne: 'Completed' } });
+        res.json(bookings);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 };
 
-// Get single booking (e.g., for confirmation page)
-export const getBookingById = async (req, res) => {
-  try {
-    const booking = await Booking.findById(req.params.id).populate("service");
-    if (!booking) return res.status(404).json({ message: "Booking not found" });
-    res.json(booking);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+// Get Past Bookings
+exports.getPastBookings = async (req, res) => {
+    try {
+        const bookings = await Booking.find({ userId: req.user.id, status: 'Completed' });
+        res.json(bookings);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+exports.cancelBooking = async (req, res) => {
+    try {
+        const booking = await Booking.findById(req.params.bookingId);
+        if (!booking) {
+            return res.status(404).json({ message: "Booking not found" });
+        }
+        booking.status = "cancelled";
+        await booking.save();
+        res.json({ message: "Booking cancelled successfully", booking });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+exports.getAllBookings = async (req, res) => {
+    try {
+        let query = {};
+        if (req.user.role !== "admin") {
+            query.user = req.user.id; 
+        }
+
+        const bookings = await Booking.find(query)
+          .populate("user", "name email")
+          .populate("service", "name");
+
+        res.json(bookings);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 };

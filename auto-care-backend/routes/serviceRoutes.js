@@ -1,23 +1,10 @@
-import express from "express";
-import {
-  getAllServices,
-  getServiceById,
-  createService,
-  updateService,
-  deleteService,
-} from "../controllers/serviceController.js";
-import authMiddleware from "../middleware/authMiddleware.js";
-import roleMiddleware from "../middleware/roleMiddleware.js";
+const express = require('express');
+const { getAllServices, getServiceById, getPackagesByService } = require('../controllers/serviceController');
 
 const router = express.Router();
 
-// Public routes
-router.get("/", getAllServices);
-router.get("/:id", getServiceById);
+router.get('/', getAllServices);
+router.get('/:serviceId', getServiceById);
+router.get('/:serviceId/packages', getPackagesByService);
 
-// Protected admin routes
-router.post("/", authMiddleware, roleMiddleware("admin"), createService);
-router.put("/:id", authMiddleware, roleMiddleware("admin"), updateService);
-router.delete("/:id", authMiddleware, roleMiddleware("admin"), deleteService);
-
-export default router;
+module.exports = router;

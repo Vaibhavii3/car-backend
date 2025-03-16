@@ -1,16 +1,13 @@
-import express from "express";
-import {
-  createBooking,
-  getUserBookings,
-  getBookingById,
-} from "../controllers/bookingController.js";
-import authMiddleware from "../middleware/authMiddleware.js";
+const express = require('express');
+const { placeBooking, getUpcomingBookings, getPastBookings, cancelBooking } = require('../controllers/bookingController');
+const authMiddleware = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-// Protected routes
-router.post("/", authMiddleware, createBooking);
-router.get("/", authMiddleware, getUserBookings);
-router.get("/:id", authMiddleware, getBookingById);
+// Booking Routes
+router.post('/book', authMiddleware, placeBooking);
+router.get('/upcoming', authMiddleware, getUpcomingBookings);
+router.get('/past', authMiddleware, getPastBookings);
+router.put('/cancel/:bookingId', authMiddleware, cancelBooking);
 
-export default router;
+module.exports = router;

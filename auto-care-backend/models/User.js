@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema(
         password: { type: String, required: true },
         phone: { type: String, unique: true },
         address: { type: String },
-        role: { type: String, enum: ["user", "admin", "service-provider"], default: "user" },
+        vehicles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Vehicle' }]
     },
     { timestamps: true }
 );

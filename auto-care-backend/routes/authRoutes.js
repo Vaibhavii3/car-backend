@@ -1,15 +1,11 @@
-import express from "express";
-import { register, login, verifyUser } from "../controllers/authController.js";
-import authMiddleware  from "../middleware/authMiddleware.js";
-import roleMiddleware from "../middleware/roleMiddleware.js";
+const express = require('express');
+const { register, login, getProfile } = require('../controllers/authController');
+const authMiddleware = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-router.post("/register", register);
-router.post("/login", login);
-router.get("/verify", authMiddleware, verifyUser);
-router.get("/admin", authMiddleware, roleMiddleware("admin"), (req, res) => {
-  res.json({ message: "Welcome, Admin!" });
-});
+router.post('/register', register);
+router.post('/login', login);
+router.get('/profile', authMiddleware, getProfile);
 
-export default router;
+module.exports = router;
