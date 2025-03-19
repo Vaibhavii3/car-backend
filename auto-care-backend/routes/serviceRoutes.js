@@ -1,10 +1,14 @@
-const express = require('express');
-const { getAllServices, getServiceById, getPackagesByService } = require('../controllers/serviceController');
+import express from "express";
+import { 
+  getAllServices, 
+  getServiceById, 
+  getPackagesByService 
+} from "../controllers/serviceController.js";
 
 const router = express.Router();
 
-router.get('/', getAllServices);
-router.get('/:serviceId', getServiceById);
-router.get('/:serviceId/packages', getPackagesByService);
+router.get("/", getAllServices);
+router.get("/:serviceId", getServiceById);
+router.get("/:serviceId/packages", getPackagesByService);
 
-module.exports = router;
+export default router;

@@ -1,23 +1,20 @@
-const express = require("express");
-const {
-    getAllPackages,
-    getPackageById,
-    createPackage,
-    updatePackage,
-    deletePackage,
-} = require("../controllers/packageController");
-const authMiddleware = require("../middleware/authMiddleware");
-const adminMiddleware = require("../middleware/adminMiddleware"); // Ensure only admins can modify packages
+import express from "express";
+import { 
+  trackOrder, 
+  updateOrderStatus, 
+  getOngoingOrders, 
+  placeOrder, 
+  getPastOrders 
+} from "../controllers/orderTrackingController.js";
+import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// Public Routes
-router.get("/", getAllPackages);
-router.get("/:packageId", getPackageById);
+// Order Tracking Routes
+router.get("/track/:orderId", authMiddleware, trackOrder);
+router.put("/update/:orderId", authMiddleware, updateOrderStatus); // Admin Use
+router.get("/ongoing", authMiddleware, getOngoingOrders);
+router.post("/place", authMiddleware, placeOrder);
+router.get("/past", authMiddleware, getPastOrders);
 
-// Admin Routes
-router.post("/", authMiddleware, adminMiddleware, createPackage);
-router.put("/:packageId", authMiddleware, adminMiddleware, updatePackage);
-router.delete("/:packageId", authMiddleware, adminMiddleware, deletePackage);
-
-module.exports = router;
+export default router;

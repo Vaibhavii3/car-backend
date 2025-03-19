@@ -1,17 +1,17 @@
-const express = require("express");
-const dotenv = require("dotenv");
-const cors = require("cors");
-const helmet = require("helmet");
-const morgan = require("morgan");
-const connectDB = require("./config/db");
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import helmet from "helmet";
+import morgan from "morgan";
+import connectDB from "./config/db.js";
 
-const authRoutes = require("./routes/authRoutes"); 
-const userRoutes = require("./routes/userRoutes");
-const bookingRoutes = require("./routes/bookingRoutes");
-const adminRoutes = require("./routes/adminRoutes");
-const reviewRoutes = require("./routes/reviewRoutes");
-const serviceRoutes = require("./routes/serviceRoutes");
-const orderTrackingRoutes = require("./routes/orderTrackingRoutes");
+import authRoutes from "./routes/authRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import bookingRoutes from "./routes/bookingRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
+import reviewRoutes from "./routes/reviewRoutes.js";
+import serviceRoutes from "./routes/serviceRoutes.js";
+import orderTrackingRoutes from "./routes/orderTrackingRoutes.js";
 
 dotenv.config();
 
