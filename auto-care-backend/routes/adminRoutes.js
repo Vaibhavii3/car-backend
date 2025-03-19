@@ -1,8 +1,7 @@
-import express from "express";
-import { getAdminStats, getAllBookings, updateBookingStatus } from "../controllers/adminController.js";
-import authMiddleware from "../middleware/authMiddleware.js";
-import roleMiddleware from "../middleware/roleMiddleware.js";
-
+const express = require("express");
+const { getAdminStats, getAllBookings, updateBookingStatus } = require("../controllers/adminController");
+const authMiddleware = require("../middleware/authMiddleware");
+const roleMiddleware = require("../middleware/roleMiddleware");
 
 const router = express.Router();
 
@@ -10,4 +9,4 @@ router.get("/stats", authMiddleware, roleMiddleware("admin"), getAdminStats);
 router.get("/bookings", authMiddleware, getAllBookings);
 router.put("/bookings/:id", authMiddleware, updateBookingStatus);
 
-export default router;
+module.exports = router;
